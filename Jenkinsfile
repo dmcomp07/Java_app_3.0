@@ -45,7 +45,7 @@ pipeline{
             }
         }
 		
-		stage('SonarQube Analysis') {
+		 stage('SonarQube Analysis') {
 			def mvn = tool 'Default Maven';
 			withSonarQubeEnv() {
 					sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=jenkins -Dsonar.projectName='jenkins'"
@@ -62,7 +62,7 @@ pipeline{
           //    }
             //}
       //}
-       stage('Quality Gate Status Check : Sonarqube'){
+         stage('Quality Gate Status Check : Sonarqube'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -72,7 +72,7 @@ pipeline{
                }
             }
        }
-        stage('Maven Build : maven'){
+         stage('Maven Build : maven'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -81,7 +81,7 @@ pipeline{
                }
             }
         }
-        stage('Docker Image Build'){
+         stage('Docker Image Build'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
