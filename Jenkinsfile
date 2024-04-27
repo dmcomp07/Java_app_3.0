@@ -24,7 +24,7 @@ pipeline{
             )
             }
         }
-         stage('Unit Test maven'){
+        stage('Unit Test maven'){
          
          when { expression {  params.action == 'create' } }
 
@@ -35,7 +35,7 @@ pipeline{
                }
             }
         }
-         stage('Integration Test maven'){
+        stage('Integration Test maven'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -45,24 +45,18 @@ pipeline{
             }
         }
 		
-		 stage('SonarQube Analysis') {
-			def mvn = tool 'Default Maven';
-			withSonarQubeEnv() {
-					sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=jenkins -Dsonar.projectName='jenkins'"
-				}
-		}
 		
-      // stage('Static code analysis: Sonarqube'){
-      //   when { expression {  params.action == 'create' } }
-       //     steps{
-       //       script{
-        //		
-        //          def SonarQubecredentialsId = 'sonarqube-api3'
-         //         statiCodeAnalysis(SonarQubecredentialsId)
-          //    }
-            //}
-      //}
-         stage('Quality Gate Status Check : Sonarqube'){
+        stage('Static code analysis: Sonarqube'){
+            when { expression {  params.action == 'create' } }
+             steps{
+              script{
+        		
+                 def SonarQubecredentialsId = 'sonarqube-api3'
+                 statiCodeAnalysis(SonarQubecredentialsId)
+              }
+           }
+		}
+        stage('Quality Gate Status Check : Sonarqube'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -72,7 +66,7 @@ pipeline{
                }
             }
        }
-         stage('Maven Build : maven'){
+        stage('Maven Build : maven'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -81,7 +75,7 @@ pipeline{
                }
             }
         }
-         stage('Docker Image Build'){
+        stage('Docker Image Build'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -90,7 +84,7 @@ pipeline{
                }
             }
         }
-         stage('Docker Image Scan: trivy '){
+        stage('Docker Image Scan: trivy '){
          when { expression {  params.action == 'create' } }
             steps{
                script{
