@@ -44,16 +44,24 @@ pipeline{
                }
             }
         }
-        stage('Static code analysis: Sonarqube'){
-         when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   
-                   def SonarQubecredentialsId = 'sonarqube-api3'
-                   statiCodeAnalysis(SonarQubecredentialsId)
-               }
-            }
-       }
+		
+		stage('SonarQube Analysis') {
+			def mvn = tool 'Default Maven';
+			withSonarQubeEnv() {
+					sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=jenkins -Dsonar.projectName='jenkins'"
+				}
+		}
+		
+      # stage('Static code analysis: Sonarqube'){
+      #   when { expression {  params.action == 'create' } }
+       #     steps{
+        #       script{
+        #		
+         #          def SonarQubecredentialsId = 'sonarqube-api3'
+          #         statiCodeAnalysis(SonarQubecredentialsId)
+           #    }
+            #}
+       #}
        stage('Quality Gate Status Check : Sonarqube'){
          when { expression {  params.action == 'create' } }
             steps{
